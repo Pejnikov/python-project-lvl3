@@ -1,0 +1,42 @@
+name: project-check
+
+on:
+  - push
+
+jobs: 
+  auto_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.7'
+      - name: Install Dependencies
+        run: |
+          pip install poetry
+          make install
+      - name: Run Linter
+        run: make lint
+      - name: Run Tests
+        run: make test
+      - name: Make Coverage Report
+        run: make coverage
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage_report
+          path: coverage.xml
+  push_coverage_report:
+    needs: [ auto_tests ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Download Coverage Report
+        uses: actions/download-artifact@v2
+        with:
+          name: coverage_report
+      - name: Publish Report
+        uses: paambaati/codeclimate-action@v2.7.4
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.TEST_REPORTER_ID }}
