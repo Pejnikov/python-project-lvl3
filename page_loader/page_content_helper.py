@@ -10,3 +10,4 @@ def localize_page_pictures(page: str, url: str, path: str):
     image_tags = soup.find_all('img')
     for tag in image_tags:
         link = tag.get('src')
+    print(link)
