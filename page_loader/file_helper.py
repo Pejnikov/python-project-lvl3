@@ -1,4 +1,5 @@
-from os.path import isdir, join
+from os.path import isdir, join, exists
+from os import makedirs
 from re import sub
 
 
@@ -13,10 +14,17 @@ def get_name_from_url(url: str) -> str:
     return ''.join(name_items)
 
 
-def save_page_text(path: str, name: str, content: str) -> str:
+def save_page_text(path: str, filename: str, content: str) -> str:
     if not isdir(path):
         raise ValueError("Directory doesn't exist")
-    file_path = join(path, name)
+    file_path = join(path, filename)
     with open(file_path, 'w') as page_file:
         page_file.write(content)
     return file_path
+
+
+def make_directory(name, path):
+    full_path = join(path, name)
+    if not exists(full_path):
+        makedirs(full_path)
+        return full_path
