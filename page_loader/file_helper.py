@@ -22,12 +22,12 @@ class ResourceSaver:
     def save_resource(self, content: bytes, url: str) -> str:
         if not isdir(self.fs_path):
             raise ValueError("Directory doesn't exist")
-        download_path, extension = splitext(url)
-        filename = get_name_from_url(download_path)
+        save_path, extension = splitext(url)
+        filename = get_name_from_url(save_path)
         full_name = filename + extension
-        download_path = join(self.fs_path, self.resource_dir_name, full_name)
-        with open(download_path, 'wb') as recoure_file:
-            recoure_file.write(content)
+        save_path = join(self.fs_path, self.resource_dir_name, full_name)
+        with open(save_path, 'wb') as resource_file:
+            resource_file.write(content)
         return join(self.resource_dir_name, full_name)
 
     def make_dir(self, name: str, path: str):
