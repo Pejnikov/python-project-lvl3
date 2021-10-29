@@ -7,7 +7,8 @@ from os.path import splitext
 
 TAGS_SOURCES = {
     'img': 'src',
-    'link': 'href'
+    'link': 'href',
+    'script': 'src'
 }
 
 
