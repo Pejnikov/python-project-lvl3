@@ -1,9 +1,11 @@
 from bs4 import BeautifulSoup  # type: ignore
 from urllib.parse import urlparse, urljoin
-from page_loader.requests_helper import get_page_content
+from page_loader.requests_helper import get_page_content, get_page_text
 from page_loader.file_helper import ResourceSaver
 from os.path import splitext
+import logging
 
+logger = logging.getLogger('page_loader.content_helper')
 
 TAGS_SOURCES = {
     'img': 'src',
@@ -52,8 +54,14 @@ def localize_resource(
     return soup
 
 
-def localize_page_resources(page: str, url: str, saver: ResourceSaver) -> str:
-    soup = BeautifulSoup(page, 'html.parser')
+def localize_page_resources(url: str, saver: ResourceSaver) -> str:
+    logger.debug('Debug log')
+    logger.info('Info log')
+    logger.warning('Warning log')
+    logger.error('Error log')
+    logger.critical('Critical log')
+    page_text = get_page_text(url)
+    soup = BeautifulSoup(page_text, 'html.parser')
     for tag in TAGS_SOURCES.keys():
         soup = localize_resource(soup, tag, url, saver)
     return saver.save_page_text(soup.prettify())

@@ -4,7 +4,7 @@ from page_loader.page_loader_engine import download
 
 def main():
     args = get_args()
-    print(download(args.url, args.output))
+    print(download(args.url, args.output, args.verbose))
 
 
 if __name__ == '__main__':
