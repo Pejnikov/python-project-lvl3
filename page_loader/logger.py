@@ -1,8 +1,13 @@
 import logging
 
+DEF_LOG_LEVEL = 0  # ERROR
+
+
 logger = logging.getLogger('page_loader')
 handler = logging.StreamHandler()
-DEF_LOG_LEVEL = 0  # ERROR
+formatter = logging.Formatter('%(asctime)s %(name)s %(levelname)s %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
 
 
 def set_logging_level(level):
@@ -13,4 +18,4 @@ def set_logging_level(level):
         3: logging.DEBUG
     }
     actual_level = levels.get(level, logging.ERROR)
-    logging.basicConfig(level=actual_level)
+    logger.setLevel(actual_level)

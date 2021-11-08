@@ -1,15 +1,21 @@
 import requests
+from page_loader.internal_exceptions import PageRequestError  # type: ignore
 
 
 def get_page_text(url: str) -> str:
-    response = requests.get(url)
-    if response.status_code != 200:
-        raise ValueError('Wrong response while page request (not 200)')
+    response = get_response(url)
     return response.text
 
 
 def get_page_content(url: str) -> bytes:
-    response = requests.get(url)
-    if response.status_code != 200:
-        raise ValueError('Wrong response while page request (not 200)')
+    response = get_response(url)
     return response.content
+
+
+def get_response(url: str) -> requests.models.Response:
+    try:
+        response = requests.get(url)
+    except requests.exceptions.RequestException as err:
+        raise PageRequestError(err.args) from err
+    else:
+        return response
