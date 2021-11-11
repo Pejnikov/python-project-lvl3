@@ -70,7 +70,7 @@ def localize_page_resources(url: str, saver: ResourceSaver) -> str:
     return saver.save_page_text(soup.prettify(), page_name)
 
 
-def get_page_name(url:str) -> str:
+def get_page_name(url: str) -> str:
     file_extension = '.html'
     return get_name_from_url(url) + file_extension
 
@@ -90,7 +90,9 @@ def get_name_from_url(url: str) -> str:
     url_for_naming = urlunparse(parsed_url).strip('//')
     if parsed_url.query != '':
         hash_name = hashlib.md5(url_for_naming.encode('utf-8')).hexdigest()
-        logger.debug('Hash is used instead of plain name: "{}"'.format(hash_name))
+        logger.debug(
+            'Hash is used instead of plain name: "{}"'.format(hash_name)
+        )
         return hash_name
     else:
         for symbol in url_for_naming:

@@ -1,4 +1,4 @@
-from os.path import isdir, join, exists, splitext
+from os.path import isdir, join, exists
 from os import makedirs
 from typing import Union
 from page_loader.internal_exceptions import ResourceSavingError  # type: ignore
@@ -24,7 +24,11 @@ class ResourceSaver:
         return page_path
 
     def save_resource(self, content: bytes, resource_name: str) -> str:
-        resource_path = join(self.fs_path, self.resource_dir_name, resource_name)
+        resource_path = join(
+            self.fs_path,
+            self.resource_dir_name,
+            resource_name
+        )
         self.save_resource_data(resource_path, content)
         return join(self.resource_dir_name, resource_name)
 
