@@ -1,5 +1,5 @@
 from page_loader.page_loader_engine import download
-from page_loader.file_helper import get_name_from_url
+from page_loader.page_content_helper import get_name_from_url
 from os.path import abspath, isfile, isdir, split, join
 import os
 import pytest
@@ -101,6 +101,8 @@ def test_links_scripts_download(requests_mock, tmp_path):
 
 @pytest.mark.parametrize("input_url,expected_name",[(
     "https://ru.hexlet.io/courses", "ru-hexlet-io-courses",
+),(
+    "https://en.wikipedia.org/w/index?title=Wikipedia:Images&action=edit","b5e1f513e6fd45c3dcc2e029a8ebf274",
 )
 ]
 )
