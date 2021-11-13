@@ -1,6 +1,6 @@
 from page_loader.page_loader_engine import download
 from page_loader.page_content_helper import get_name_from_url
-from os.path import abspath, isfile, isdir, split, join
+from os.path import abspath, isfile, split, join
 import os
 import pytest
 
