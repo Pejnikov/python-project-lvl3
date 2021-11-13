@@ -1,7 +1,7 @@
-from os.path import isdir, join, exists
+from os.path import isdir, join
 from os import makedirs
 from typing import Union
-from page_loader.internal_exceptions import ResourceSavingError # type: ignore
+from page_loader.internal_exceptions import ResourceSavingError  # type: ignore
 import logging
 
 
