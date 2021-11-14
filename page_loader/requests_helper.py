@@ -15,7 +15,9 @@ def get_page_content(url: str) -> bytes:
 def get_response(url: str) -> requests.models.Response:
     try:
         response = requests.get(url)
+        response.raise_for_status()
     except requests.exceptions.RequestException as err:
-        raise PageRequestError(err.args) from err
+        error_msg = "Failed to get '{}' with error: {}".format(url, err.args)
+        raise PageRequestError(error_msg) from err
     else:
         return response
