@@ -1,4 +1,6 @@
+from typing import Callable
 from bs4 import BeautifulSoup  # type: ignore
+from progress.bar import FillingCirclesBar   # type: ignore
 from urllib.parse import urlparse, urljoin, urlunparse
 from os.path import splitext
 from page_loader.requests_helper import get_page_content, get_page_text
@@ -8,14 +10,49 @@ import hashlib
 
 logger = logging.getLogger('page_loader.content_helper')
 
-TAGS_SOURCES = {
-    'img': 'src',
-    'link': 'href',
-    'script': 'src'
+IMG_ATTR = 'img'
+LINK_ATTR = 'link'
+SCRIPT_ATTR = 'script'
+REFERENCE_ATTRIBUTE = {
+    IMG_ATTR: 'src',
+    LINK_ATTR: 'href',
+    SCRIPT_ATTR: 'src'
+}
+SUITABLE_ATR_CONTENT = {
+    IMG_ATTR: {'.png', '.jpg'}
 }
 
 
-def is_same_domen(src: str, main_url: str) -> bool:
+def localize_page(url: str, saver: ResourceSaver) -> str:
+    page_text = get_page_text(url)
+    soup = BeautifulSoup(page_text, 'html.parser')
+    soup = localize_resources(soup, url, saver)
+    page_name = get_page_name(url)
+    return saver.save_page_text(soup.prettify(), page_name)
+
+
+def localize_resources(
+    soup: BeautifulSoup, url: str, saver: ResourceSaver
+) -> BeautifulSoup:
+    resource_filter = get_resource_filter(url)
+    suitable_tags = soup.find_all(resource_filter)
+    bar = FillingCirclesBar('FillingCirclesBar', max=len(suitable_tags))
+    for tag in suitable_tags:
+        resource_link = tag.get(REFERENCE_ATTRIBUTE[tag.name])
+        logger.debug('Trying to download resource: "{}"'.format(resource_link))
+        down_link = make_download_link(resource_link, url)
+        logger.debug('Link to resource: "{}"'.format(down_link))
+        resource_content = get_page_content(down_link)
+        resource_name = get_resource_name(down_link)
+        src_path = saver.save_resource(resource_content, resource_name)
+        logger.debug('Path to down resource: "{}"'.format(src_path))
+        tag[REFERENCE_ATTRIBUTE[tag.name]] = src_path
+        bar.next()
+    bar.finish()
+    return soup
+
+
+def has_same_domen(src: str, main_url: str) -> bool:
     parsed_url = urlparse(main_url)
     parsed_src = urlparse(src)
     if parsed_src.netloc == '' or parsed_src.netloc.endswith(parsed_url.netloc):
@@ -24,11 +61,30 @@ def is_same_domen(src: str, main_url: str) -> bool:
 
 
 def has_suitable_content(src: str, tag_name: str) -> bool:
-    supported_formats = {'.png', '.jpg'}
-    if tag_name == 'img':
+    if tag_name in SUITABLE_ATR_CONTENT.keys():
         extension = splitext(src)[1]
-        return extension in supported_formats
+        return extension in SUITABLE_ATR_CONTENT[tag_name]
     return True
+
+
+def get_resource_filter(url: str) -> Callable[[str], bool]:
+    def inner(tag):
+        if tag.name in REFERENCE_ATTRIBUTE.keys():
+            src = tag.get(REFERENCE_ATTRIBUTE[tag.name])
+            logger.debug(
+                'Processing the page tag: "{}"'
+                ' with resource: "{}"'.format(tag.name, src)
+            )
+            if src:
+                if has_same_domen(src, url):
+                    if has_suitable_content(src, tag.name):
+                        logger.debug(
+                            'The resource is suitable: "{}"'
+                            ' with resource: "{}"'.format(tag.name, src)
+                        )
+                        return True
+        return False
+    return inner
 
 
 def make_download_link(url: str, main_url: str) -> str:
@@ -36,38 +92,6 @@ def make_download_link(url: str, main_url: str) -> str:
     if parsed_src.netloc == '':
         return urljoin(main_url, url)
     return url
-
-
-def localize_resource(
-    soup: BeautifulSoup,
-    resource_tag: str,
-    url: str,
-    saver: ResourceSaver
-) -> BeautifulSoup:
-    page_tags = soup.find_all(resource_tag)
-    for tag in page_tags:
-        src = tag.get(TAGS_SOURCES[resource_tag])
-        if src:
-            logger.debug('Trying to download resource: "{}"'.format(src))
-            if is_same_domen(src, url) and has_suitable_content(src, tag.name):
-                down_link = make_download_link(src, url)
-                logger.debug('Link to resource: "{}"'.format(down_link))
-                src_content = get_page_content(down_link)
-                resource_name = get_resource_name(down_link)
-                src_path = saver.save_resource(src_content, resource_name)
-                logger.debug('Path to down resource: "{}"'.format(src_path))
-                tag[TAGS_SOURCES[resource_tag]] = src_path
-    return soup
-
-
-def localize_page_resources(url: str, saver: ResourceSaver) -> str:
-    page_text = get_page_text(url)
-    soup = BeautifulSoup(page_text, 'html.parser')
-    for tag in TAGS_SOURCES.keys():
-        logger.debug('Processing the page tag: "{}"'.format(tag))
-        soup = localize_resource(soup, tag, url, saver)
-    page_name = get_page_name(url)
-    return saver.save_page_text(soup.prettify(), page_name)
 
 
 def get_page_name(url: str) -> str:
