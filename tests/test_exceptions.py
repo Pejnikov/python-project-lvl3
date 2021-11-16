@@ -22,13 +22,6 @@ def test_resource_dir_exist(requests_mock, tmp_path):
         download(test_page_url, tmp_path)
 
 
-def test_resource_exist(requests_mock, tmp_path):
-    requests_mock.get(test_page_url, text='TEST')
-    download(test_page_url, tmp_path)
-    with pytest.raises(ResourceSavingError):
-        download(test_page_url, tmp_path)
-
-
 def test_invalid_url(requests_mock, tmp_path):
     test_page_url = '//ru.hexlet.io/courses'
     requests_mock.get(test_page_url, text='TEST')
