@@ -16,7 +16,7 @@ class ResourceSaver:
             )
         self.fs_path = path
         self.resource_dir_name = resource_dir_name
-        self.resource_path = self.make_resource_dir()
+        self.resource_dir_path = None
 
     def save_page_text(self, content: str, name: str) -> str:
         page_path = os.path.join(self.fs_path, name)
@@ -24,10 +24,10 @@ class ResourceSaver:
         return page_path
 
     def save_resource(self, content: bytes, resource_name: str) -> str:
+        if not self.resource_dir_path:
+            self.resource_dir_path = self.make_resource_dir()
         resource_path = os.path.join(
-            self.fs_path,
-            self.resource_dir_name,
-            resource_name
+            self.resource_dir_path, resource_name
         )
         self.save_resource_data(resource_path, content)
         return os.path.join(self.resource_dir_name, resource_name)
@@ -68,5 +68,5 @@ class ResourceSaver:
         return full_path
 
     def del_resorce_dir_if_empty(self):
-        if not os.listdir(self.resource_path):
-            os.rmdir(self.resource_path)
+        if not os.listdir(self.resource_dir_path):
+            os.rmdir(self.resource_dir_path)

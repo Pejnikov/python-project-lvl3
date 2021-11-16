@@ -16,8 +16,13 @@ def test_resource_dir_permissions(requests_mock, tmp_path):
 
 def test_resource_dir_exist(requests_mock, tmp_path):
     exp_dir_name = 'ru-hexlet-io-courses_files'
+    test_resource_link = 'https://ru.hexlet.io/test.css'
     os.makedirs(os.path.join(tmp_path, exp_dir_name))
-    requests_mock.get(test_page_url, text='TEST')
+    requests_mock.get(
+        test_page_url,
+        text='<link href="{}"/>'.format(test_resource_link)
+    )
+    requests_mock.get(test_resource_link, text='test')
     with pytest.raises(ResourceSavingError):
         download(test_page_url, tmp_path)
 
