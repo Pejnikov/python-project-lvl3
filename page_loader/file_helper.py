@@ -45,7 +45,7 @@ class ResourceSaver:
             ) from err
         else:
             logger.info(
-                'Resource was saved: {}'.format(path)
+                "Resource was saved: {}".format(path)
             )
 
     def make_resource_dir(self):
