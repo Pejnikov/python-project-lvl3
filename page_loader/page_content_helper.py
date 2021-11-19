@@ -55,7 +55,7 @@ def localize_resources(
 def has_same_domen(src: str, main_url: str) -> bool:
     parsed_url = urlparse(main_url)
     parsed_src = urlparse(src)
-    if parsed_src.netloc == '' or parsed_src.netloc.endswith(parsed_url.netloc):
+    if parsed_src.netloc == '' or parsed_src.netloc == parsed_url.netloc:
         return True
     return False
 
