@@ -46,6 +46,9 @@ def test_images_download(requests_mock, tmp_path):
         # Test that only particular images are downloaded
         page_resources_path = join(path, exp_dir_name)
         _, _, filenames = next(os.walk(page_resources_path))
+        assert len(filenames) == len(exp_img_names)
+        for image_name in exp_img_names:
+            assert image_name in filenames
         assert exp_img_names == filenames
         # Test that downloaded resource have the expected content
         down_image_path = join(page_resources_path, exp_img_names[0])
@@ -62,11 +65,14 @@ def test_links_scripts_download(requests_mock, tmp_path):
     test_css_path = fixture_path + '/Sheet.css'
     test_script_url = 'https://ru.hexlet.io/packs/js/runtime.js'
     test_script_path = fixture_path + '/Script.js'
+    test_html_url = 'https://ru.hexlet.io/assets/newpage.html'
+    test_html_text = 'Test'
     exp_page_file_name = 'ru-hexlet-io-courses.html'
     exp_page_path = fixture_path + '/exp_web_page.html'
     exp_resources_names = [
         'ru-hexlet-io-packs-js-runtime.js',
-        'ru-hexlet-io-assets-application.css'
+        'ru-hexlet-io-assets-application.css',
+        'ru-hexlet-io-assets-newpage.html'
     ]
     exp_dir_name = 'ru-hexlet-io-courses_files'
     # Mock test page and its resources
@@ -79,6 +85,7 @@ def test_links_scripts_download(requests_mock, tmp_path):
         requests_mock.get(test_page_url, text=test_page_text)
         requests_mock.get(test_css_url, text=test_css_content)
         requests_mock.get(test_script_url, text=test_script_content)
+        requests_mock.get(test_html_url, text=test_html_text)
         # Test that page text is downloaded and saved
         down_page_path = download(test_page_url, tmp_path)
         assert isfile(down_page_path)
@@ -95,7 +102,9 @@ def test_links_scripts_download(requests_mock, tmp_path):
         # Test that only particular resources are downloaded
         page_resources_path = join(path, exp_dir_name)
         _, _, filenames = next(os.walk(page_resources_path))
-        assert exp_resources_names == filenames
+        assert len(exp_resources_names) == len(filenames)
+        for resource_name in exp_resources_names:
+            assert resource_name in filenames
         # Test that downloaded resources have the expected content
         down_css_path = join(page_resources_path, exp_resources_names[1])
         down_script_path = join(page_resources_path, exp_resources_names[0])
