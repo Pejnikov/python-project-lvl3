@@ -49,7 +49,6 @@ def test_images_download(requests_mock, tmp_path):
         assert len(filenames) == len(exp_img_names)
         for image_name in exp_img_names:
             assert image_name in filenames
-        assert exp_img_names == filenames
         # Test that downloaded resource have the expected content
         down_image_path = join(page_resources_path, exp_img_names[0])
         with open(abspath(down_image_path), 'br') as down_file:

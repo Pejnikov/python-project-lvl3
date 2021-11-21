@@ -27,7 +27,7 @@ def localize_page(url: str, saver: ResourceSaver) -> str:
     page_text = get_page_text(url)
     soup = BeautifulSoup(page_text, 'html.parser')
     soup = localize_resources(soup, url, saver)
-    page_name = get_page_name(url)
+    page_name = get_resource_name(url)
     return saver.save_page_text(soup.prettify(), page_name)
 
 
@@ -94,14 +94,11 @@ def make_download_link(url: str, main_url: str) -> str:
     return url
 
 
-def get_page_name(url: str) -> str:
-    file_extension = '.html'
-    return get_name_from_url(url) + file_extension
-
-
 def get_resource_name(url: str) -> str:
     parsed_url = urlparse(url)
     path, extension = splitext(parsed_url.path)
+    if extension == '':
+        extension = '.html'
     parsed_url = parsed_url._replace(path=path)
     filename = get_name_from_url(urlunparse(parsed_url))
     resource_name = filename + extension
