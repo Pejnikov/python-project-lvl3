@@ -36,7 +36,7 @@ def localize_resources(
 ) -> BeautifulSoup:
     resource_filter = get_resource_filter(url)
     suitable_tags = soup.find_all(resource_filter)
-    bar = FillingCirclesBar('Downloading progress: ', max=len(suitable_tags))
+    bar = FillingCirclesBar('Downloading progress:', max=len(suitable_tags))
     for tag in suitable_tags:
         resource_link = tag.get(REFERENCE_ATTRIBUTE[tag.name])
         logger.debug('Trying to download resource: "{}"'.format(resource_link))
