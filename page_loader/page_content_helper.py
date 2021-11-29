@@ -5,10 +5,12 @@ from urllib.parse import urlparse, urljoin, urlunparse
 from os.path import splitext
 from page_loader.requests_helper import get_content, get_page_text
 from page_loader.file_helper import ResourceSaver
+from os import pathconf
 import logging
 import hashlib
 
 logger = logging.getLogger(__name__)
+MAX_LENGTH_OF_FILENAME = pathconf('/', 'PC_NAME_MAX')
 
 IMG_ATTR = 'img'
 LINK_ATTR = 'link'
@@ -109,7 +111,7 @@ def get_name_from_url(url: str) -> str:
     name_items = []
     parsed_url = urlparse(url)._replace(scheme='')
     url_for_naming = urlunparse(parsed_url).strip('//')
-    if parsed_url.query != '':
+    if len(url_for_naming) > MAX_LENGTH_OF_FILENAME:
         hash_name = hashlib.md5(url_for_naming.encode('utf-8')).hexdigest()
         logger.debug(
             'Hash is used instead of plain name: "{}"'.format(hash_name)

@@ -118,8 +118,20 @@ def test_links_scripts_download(requests_mock, tmp_path):
 @pytest.mark.parametrize("input_url,expected_name", [(
     "https://ru.hexlet.io/courses", "ru-hexlet-io-courses",
 ), (
-    "https://en.wikipedia.org/w/index?title=Wikipedia:Images&action=edit",
-    "b5e1f513e6fd45c3dcc2e029a8ebf274",
+    "https://en.wikipedia.org/w/index?title=Wikipedia:Images&action=editaaaaaa"
+    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "b51c814cb5264fa8e56b2aad88029e54",
+), (
+    "https://en.wikipedia.org/w/index?title=Wikipedia:Images&action=editaaaaaa"
+    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "en-wikipedia-org-w-index-title-Wikipedia-Images-action-editaaaaaaaaaaaaaa"
+    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
 )
 ]
 )
