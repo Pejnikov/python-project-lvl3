@@ -4,7 +4,7 @@ from page_loader.internal_exceptions import ResourceSavingError  # type: ignore
 import logging
 
 
-logger = logging.getLogger('page_loader.file_helper')
+logger = logging.getLogger(__name__)
 
 
 class ResourceSaver:

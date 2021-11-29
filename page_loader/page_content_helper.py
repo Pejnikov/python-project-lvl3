@@ -8,7 +8,7 @@ from page_loader.file_helper import ResourceSaver
 import logging
 import hashlib
 
-logger = logging.getLogger('page_loader.content_helper')
+logger = logging.getLogger(__name__)
 
 IMG_ATTR = 'img'
 LINK_ATTR = 'link'
