@@ -52,7 +52,7 @@ def localize_resources(
     return soup
 
 
-def has_same_domen(src: str, main_url: str) -> bool:
+def has_same_domain(src: str, main_url: str) -> bool:
     parsed_url = urlparse(main_url)
     parsed_src = urlparse(src)
     if parsed_src.netloc == '' or parsed_src.netloc == parsed_url.netloc:
@@ -76,7 +76,7 @@ def get_resource_filter(url: str) -> Callable[[str], bool]:
                 ' with resource: "{}"'.format(tag.name, src)
             )
             if src:
-                if has_same_domen(src, url):
+                if has_same_domain(src, url):
                     if has_suitable_content(src, tag.name):
                         logger.debug(
                             'The resource is suitable: "{}"'

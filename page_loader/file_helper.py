@@ -67,6 +67,6 @@ class ResourceSaver:
             )
         return full_path
 
-    def del_resorce_dir_if_empty(self):
+    def del_resource_dir_if_empty(self):
         if not os.listdir(self.resource_dir_path):
             os.rmdir(self.resource_dir_path)
