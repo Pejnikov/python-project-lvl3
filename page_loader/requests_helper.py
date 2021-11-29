@@ -7,7 +7,7 @@ def get_page_text(url: str) -> str:
     return response.text
 
 
-def get_page_content(url: str) -> bytes:
+def get_content(url: str) -> bytes:
     response = get_response(url)
     return response.content
 

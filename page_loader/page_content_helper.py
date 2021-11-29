@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup  # type: ignore
 from progress.bar import FillingCirclesBar   # type: ignore
 from urllib.parse import urlparse, urljoin, urlunparse
 from os.path import splitext
-from page_loader.requests_helper import get_page_content, get_page_text
+from page_loader.requests_helper import get_content, get_page_text
 from page_loader.file_helper import ResourceSaver
 import logging
 import hashlib
@@ -42,7 +42,7 @@ def localize_resources(
         logger.debug('Trying to download resource: "{}"'.format(resource_link))
         down_link = make_download_link(resource_link, url)
         logger.debug('Link to resource: "{}"'.format(down_link))
-        resource_content = get_page_content(down_link)
+        resource_content = get_content(down_link)
         resource_name = get_resource_name(down_link)
         src_path = saver.save_resource(resource_content, resource_name)
         logger.debug('Path to down resource: "{}"'.format(src_path))
