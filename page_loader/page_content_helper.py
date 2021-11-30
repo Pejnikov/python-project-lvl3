@@ -71,21 +71,22 @@ def has_suitable_content(src: str, tag_name: str) -> bool:
 
 def get_resource_filter(url: str) -> Callable[[str], bool]:
     def inner(tag):
-        if tag.name in REFERENCE_ATTRIBUTE:
-            src = tag.get(REFERENCE_ATTRIBUTE[tag.name])
-            logger.debug(
-                'Processing the page tag: "{}"'
-                ' with resource: "{}"'.format(tag.name, src)
-            )
-            if src and has_same_domain(src, url) and has_suitable_content(
-                src, tag.name
-            ):
-                logger.debug(
-                    'The resource is suitable: "{}"'
-                    ' with resource: "{}"'.format(tag.name, src)
-                )
-                return True
-        return False
+        if tag.name not in REFERENCE_ATTRIBUTE:
+            return False
+        src = tag.get(REFERENCE_ATTRIBUTE[tag.name])
+        logger.debug(
+            'Processing the page tag: "{}"'
+            ' with resource: "{}"'.format(tag.name, src)
+        )
+        if not (src and has_same_domain(src, url) and has_suitable_content(
+            src, tag.name)
+        ):
+            return False
+        logger.debug(
+            'The resource is suitable: "{}"'
+            ' with resource: "{}"'.format(tag.name, src)
+        )
+        return True
     return inner
 
 
