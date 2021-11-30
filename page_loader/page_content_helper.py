@@ -108,6 +108,13 @@ def get_resource_name(url: str) -> str:
 
 
 def get_name_from_url(url: str) -> str:
+    '''
+    Returns url with removed schema and replaced any non alphabetic and non
+    digit characters by '-'.
+
+    Returns hash if the length of url exceeds max length of filename of the
+    current OS
+    '''
     name_items = []
     parsed_url = urlparse(url)._replace(scheme='')
     url_for_naming = urlunparse(parsed_url).strip('//')

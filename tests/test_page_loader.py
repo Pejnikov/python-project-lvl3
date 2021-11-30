@@ -1,5 +1,6 @@
 from page_loader.page_loader_engine import download
 from page_loader.page_content_helper import get_name_from_url
+from page_loader.page_content_helper import MAX_LENGTH_OF_FILENAME
 from os.path import abspath, isfile, split, join
 import os
 import pytest
@@ -118,17 +119,13 @@ def test_links_scripts_download(requests_mock, tmp_path):
 @pytest.mark.parametrize("input_url,expected_name", [(
     "https://ru.hexlet.io/courses", "ru-hexlet-io-courses",
 ), (
-    "https://en.wikipedia.org/w/index?title=Wikipedia:Images&action=editaaaaaa"
-    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-    "b51c814cb5264fa8e56b2aad88029e54",
+    "https://en.wikipedia.org/w" + (  # returns hash if filename > PC_NAME_MAX
+        MAX_LENGTH_OF_FILENAME - len("en.wikipedia.org/w") + 1) * "a",
+    "7e21027449f9ce10527bb7a2f42dbb05",
 ), (
-    "https://en.wikipedia.org/w/index?title=Wikipedia:Images&action=editaaaaaa"
-    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-    "en-wikipedia-org-w-index-title-Wikipedia-Images-action-editaaaaaaaaaaaaaa"
+    "https://en.wikipedia.org/w" + (  # returns name if filename == PC_NAME_MAX
+        MAX_LENGTH_OF_FILENAME - len("en.wikipedia.org/w")) * "a",
+    "en-wikipedia-org-waaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
     "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
     "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
     "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",

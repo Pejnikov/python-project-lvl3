@@ -24,6 +24,11 @@ class ResourceSaver:
         return page_path
 
     def save_resource(self, content: bytes, resource_name: str) -> str:
+        """
+        Checks the presence of resource directory path (it's important to
+        create resource directory only if the downloaded page have some
+        resources for downloading) then saves data to the resource directory.
+        """
         if not self.resource_dir_path:
             self.resource_dir_path = self.make_resource_dir()
         resource_path = os.path.join(
