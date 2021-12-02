@@ -91,10 +91,13 @@ def get_resource_filter(url: str) -> Callable[[str], bool]:
 
 
 def make_download_link(url: str, main_url: str) -> str:
-    parsed_src = urlparse(url)
-    if parsed_src.netloc == '':
-        return urljoin(main_url, url)
-    return url
+    parsed_main = urlparse(main_url)
+    if parsed_main.path and not parsed_main.path.endswith('/'):
+        parsed_main = parsed_main._replace(
+            path='/'.join([parsed_main.path, ''])
+        )
+        main_url = urlunparse(parsed_main)
+    return urljoin(main_url, url)
 
 
 def get_resource_name(url: str) -> str:

@@ -1,6 +1,7 @@
 from page_loader.page_loader_engine import download
 from page_loader.page_content_helper import get_name_from_url
 from page_loader.page_content_helper import MAX_LENGTH_OF_FILENAME
+from page_loader.page_content_helper import make_download_link
 from os.path import abspath, isfile, split, join
 import os
 import pytest
@@ -132,6 +133,25 @@ def test_links_scripts_download(requests_mock, tmp_path):
 )
 ]
 )
-def test_content_file_names(input_url, expected_name):
+def test_filename_maker(input_url, expected_name):
     result_name = get_name_from_url(input_url)
     assert result_name == expected_name
+
+
+@pytest.mark.parametrize("url,main_url,result", [(
+    "/assets/professions/nodejs.png",
+    "https://ru.hexlet.io/courses",
+    "https://ru.hexlet.io/assets/professions/nodejs.png",
+), (
+    "nodejs.png",
+    "https://ru.hexlet.io/courses",
+    "https://ru.hexlet.io/courses/nodejs.png",
+), (
+    "nodejs.png",
+    "https://ru.hexlet.io",
+    "https://ru.hexlet.io/nodejs.png",
+)
+]
+)
+def test_down_link_maker(url, main_url, result):
+    assert make_download_link(url, main_url) == result
