@@ -1,6 +1,7 @@
 from page_loader.page_loader_engine import download
 from page_loader.internal_exceptions import ResourceSavingError
 from page_loader.internal_exceptions import PageRequestError
+from page_loader.file_helper import handle_fs_exceptions
 import pytest
 import os
 
@@ -25,6 +26,13 @@ def test_resource_dir_exist(requests_mock, tmp_path):
     requests_mock.get(test_resource_link, text='test')
     with pytest.raises(ResourceSavingError):
         download(test_page_url, tmp_path)
+
+
+def test_OS_errors_handling():
+    def get_test_exception():
+        raise TimeoutError
+    with pytest.raises(ResourceSavingError):
+        handle_fs_exceptions(get_test_exception)()
 
 
 def test_invalid_url(requests_mock, tmp_path):

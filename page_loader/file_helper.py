@@ -15,6 +15,10 @@ def handle_fs_exceptions(func):
                 "Not enough permissions. "
                 "The file can't be created."
             ) from err
+        except OSError as err:
+            raise ResourceSavingError(
+                "The file can't be created due to OS-related error."
+            ) from err
     return inner
 
 
@@ -73,7 +77,11 @@ class ResourceSaver:
             ) from err
         except FileExistsError as err:
             raise ResourceSavingError(
-                "The page resource directory already exists"
+                "The page resource directory already exists."
+            ) from err
+        except OSError as err:
+            raise ResourceSavingError(
+                "The directory can't be created due to OS-related error."
             ) from err
         else:
             logger.info(
