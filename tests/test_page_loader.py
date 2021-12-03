@@ -8,15 +8,15 @@ import pytest
 
 
 def test_images_download(requests_mock, tmp_path):
-    fixture_path = 'tests/fixtures/images_download'
+    fixture_path = 'tests/fixtures/images_download/'
     test_page_url = 'https://ru.hexlet.io/courses'
-    test_page_path = fixture_path + '/initial_web_page.html'
+    test_page_path = join(fixture_path, 'initial_web_page.html')
     test_img_url = 'https://ru.hexlet.io/assets/professions/nodejs.png'
-    test_img_path = fixture_path + '/Image.png'
+    test_img_path = join(fixture_path, 'Image.png')
     test_img1_url = 'https://ru.hexlet.io/image1.jpg'
-    test_img1_path = fixture_path + '/Image1.jpg'
+    test_img1_path = join(fixture_path, 'Image1.jpg')
     exp_page_file_name = 'ru-hexlet-io-courses.html'
-    exp_page_path = fixture_path + '/exp_web_page.html'
+    exp_page_path = join(fixture_path, 'exp_web_page.html')
     exp_img_names = [
         'ru-hexlet-io-assets-professions-nodejs.png',
         'ru-hexlet-io-image1.jpg'
@@ -61,15 +61,15 @@ def test_images_download(requests_mock, tmp_path):
 def test_links_scripts_download(requests_mock, tmp_path):
     fixture_path = 'tests/fixtures/links_scripts_download/'
     test_page_url = 'https://ru.hexlet.io/courses'
-    test_page_path = fixture_path + '/initial_web_page.html'
+    test_page_path = join(fixture_path, 'initial_web_page.html')
     test_css_url = 'https://ru.hexlet.io/assets/application.css'
-    test_css_path = fixture_path + '/Sheet.css'
+    test_css_path = join(fixture_path, 'Sheet.css')
     test_script_url = 'https://ru.hexlet.io/packs/js/runtime.js'
-    test_script_path = fixture_path + '/Script.js'
+    test_script_path = join(fixture_path, 'Script.js')
     test_html_url = 'https://ru.hexlet.io/assets/newpage.html'
     test_html_text = 'Test'
     exp_page_file_name = 'ru-hexlet-io-courses.html'
-    exp_page_path = fixture_path + '/exp_web_page.html'
+    exp_page_path = join(fixture_path, 'exp_web_page.html')
     exp_resources_names = [
         'ru-hexlet-io-packs-js-runtime.js',
         'ru-hexlet-io-assets-application.css',
