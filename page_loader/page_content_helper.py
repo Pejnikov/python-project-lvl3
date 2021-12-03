@@ -6,6 +6,7 @@ from os.path import splitext
 from page_loader.requests_helper import get_response_with_content, get_page_text
 from page_loader.file_helper import ResourceSaver
 from os import pathconf
+import re
 import logging
 import hashlib
 
@@ -129,9 +130,5 @@ def get_name_from_url(url: str) -> str:
         )
         return hash_name
     else:
-        for symbol in url_for_naming:
-            if symbol.isalpha() or symbol.isdigit():
-                name_items.append(symbol)
-            else:
-                name_items.append('-')
-        return ''.join(name_items)
+        symbol_to_replace = '-'
+        return re.sub('\W', symbol_to_replace, url_for_naming)
