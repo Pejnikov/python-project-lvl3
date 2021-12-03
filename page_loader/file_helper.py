@@ -88,7 +88,3 @@ class ResourceSaver:
                 'Resources directory was created: {}'.format(full_path)
             )
         return full_path
-
-    def del_resource_dir_if_empty(self):
-        if not os.listdir(self.resource_dir_path):
-            os.rmdir(self.resource_dir_path)
