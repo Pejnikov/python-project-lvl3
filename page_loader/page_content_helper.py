@@ -120,7 +120,6 @@ def get_name_from_url(url: str) -> str:
     Returns hash if the length of url exceeds max length of filename of the
     current OS
     '''
-    name_items = []
     parsed_url = urlparse(url)._replace(scheme='')
     url_for_naming = urlunparse(parsed_url).strip('//')
     if len(url_for_naming) > MAX_LENGTH_OF_FILENAME:
@@ -131,4 +130,4 @@ def get_name_from_url(url: str) -> str:
         return hash_name
     else:
         symbol_to_replace = '-'
-        return re.sub('\W', symbol_to_replace, url_for_naming)
+        return re.sub(r'\W', symbol_to_replace, url_for_naming)
