@@ -18,10 +18,8 @@ jobs:
           make install
       - name: Run Linter
         run: make lint
-      - name: Run Tests
+      - name: Run Tests / Make Coverage Report
         run: make test
-      - name: Make Coverage Report
-        run: make coverage
       - name: Publish Report
         uses: paambaati/codeclimate-action@v2.7.4
         env:
