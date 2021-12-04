@@ -2,6 +2,7 @@ from page_loader.page_loader_engine import download
 from page_loader.internal_exceptions import ResourceSavingError
 from page_loader.internal_exceptions import PageRequestError
 from page_loader.file_helper import handle_fs_exceptions
+import logging
 import pytest
 import os
 
@@ -15,7 +16,7 @@ def test_resource_dir_permissions(requests_mock, tmp_path):
         download(test_page_url, tmp_path)
 
 
-def test_resource_dir_exist(requests_mock, tmp_path):
+def test_resource_dir_exist(requests_mock, tmp_path, caplog):
     exp_dir_name = 'ru-hexlet-io-courses_files'
     test_resource_link = 'https://ru.hexlet.io/test.css'
     os.makedirs(os.path.join(tmp_path, exp_dir_name))
@@ -24,8 +25,9 @@ def test_resource_dir_exist(requests_mock, tmp_path):
         text='<link href="{}"/>'.format(test_resource_link)
     )
     requests_mock.get(test_resource_link, text='test')
-    with pytest.raises(ResourceSavingError):
+    with caplog.at_level(logging.ERROR):
         download(test_page_url, tmp_path)
+    assert 'Resources directory already exist' in caplog.text
 
 
 def test_OS_errors_handling():

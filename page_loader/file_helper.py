@@ -75,10 +75,9 @@ class ResourceSaver:
                 "Not enough permissions. "
                 "The directory for page resources can't be created."
             ) from err
-        except FileExistsError as err:
-            raise ResourceSavingError(
-                "The page resource directory already exists."
-            ) from err
+        except FileExistsError:
+            logger.error("Resources directory already exist:'{}'. It will "
+                         "be used for saving page resources".format(full_path))
         except OSError as err:
             raise ResourceSavingError(
                 "The directory can't be created due to OS-related error."
