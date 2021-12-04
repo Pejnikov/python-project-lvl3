@@ -68,6 +68,7 @@ def test_links_scripts_download(requests_mock, tmp_path):
     test_script_path = join(fixture_path, 'Script.js')
     test_html_url = 'https://ru.hexlet.io/assets/newpage.html'
     test_html_text = 'Test'
+    test_not_found_url = 'https://ru.hexlet.io/clear_requirements.txt'
     exp_page_file_name = 'ru-hexlet-io-courses.html'
     exp_page_path = join(fixture_path, 'exp_web_page.html')
     exp_resources_names = [
@@ -87,6 +88,7 @@ def test_links_scripts_download(requests_mock, tmp_path):
         requests_mock.get(test_css_url, text=test_css_content)
         requests_mock.get(test_script_url, text=test_script_content)
         requests_mock.get(test_html_url, text=test_html_text)
+        requests_mock.get(test_not_found_url, text='TEST', status_code=403)
         # Test that page text is downloaded and saved
         down_page_path = download(test_page_url, tmp_path)
         assert isfile(down_page_path)

@@ -5,6 +5,7 @@ from urllib.parse import urlparse, urljoin, urlunparse
 from os.path import splitext
 from page_loader.requests_helper import get_response_with_content, get_page_text
 from page_loader.file_helper import ResourceSaver
+from page_loader.internal_exceptions import PageRequestError
 from os import pathconf
 import re
 import logging
@@ -46,7 +47,11 @@ def localize_resources(
         down_link = make_download_link(resource_link, url)
         logger.debug('Link to resource: "{}"'.format(down_link))
         resource_name = get_resource_name(down_link)
-        response_with_content = get_response_with_content(down_link)
+        try:
+            response_with_content = get_response_with_content(down_link)
+        except PageRequestError as err:
+            logger.error("Resource can't be downloaded. {}".format(err))
+            continue
         src_path = saver.save_resource(response_with_content, resource_name)
         logger.debug('Path to down resource: "{}"'.format(src_path))
         tag[REFERENCE_ATTRIBUTE[tag.name]] = src_path
